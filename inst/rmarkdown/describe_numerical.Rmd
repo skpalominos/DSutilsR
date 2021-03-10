@@ -1,0 +1,70 @@
+---
+title: "Análisis Descriptivo Variables Continuas"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r ,echo=FALSE,include=FALSE}
+rm(list = ls())
+library(plotly)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+library(stringr)
+library(stats)
+library(kableExtra)
+library(data.table)
+'%notin%' <- Negate('%in%')
+```
+
+```{r, include=FALSE,warning=FALSE}
+colores <- function(x){case_when(x < 25 ~ cell_spec(x,color="white",background="green",bold =T),
+                                 x < 50 ~ cell_spec(x,color="white",background="orange",bold =T),
+                                 x < 75 ~ cell_spec(x,color="white",background="lightcoral",bold=T),
+                                 TRUE ~ cell_spec(x,color="white",background="orangered",bold=T))}
+```
+
+### Porcentaje de Missing
+
+```{r ,echo=FALSE,include=FALSE,warning=FALSE}
+base <- base %>% select(cont_var,var_cat)
+miss <- base %>% group_by(get(var_cat)) %>% summarize_at(cont_var,funs(sum(is.na(.)) / length(.)))
+miss <- miss %>% setnames(old="get(var_cat)",new=var_cat)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+miss %>% data.frame() %>% select(var_cat,everything()) %>% mutate_at(names(miss %>% select(-var_cat)),"colores") %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+### Estadisticos Descriptivos
+
+```{r ,echo=FALSE,warning=FALSE}
+
+per_25 <- function(x){quantile(x %>% na.omit(),probs = (0.25))}
+per_75 <- function(x){quantile(x %>% na.omit(),probs = (0.75))}
+
+M <- matrix(nrow=7,ncol=length(cont_var))
+M[1,] <- round((base %>% select(cont_var) %>% apply(2,mean,na.rm=TRUE)),3) 
+M[2,] <- round((base %>% select(cont_var) %>% apply(2,sd,na.rm=TRUE)),3) 
+M[3,] <- round((base %>% select(cont_var) %>% apply(2,min,na.rm=TRUE)),3) 
+M[4,] <- round((base %>% select(cont_var) %>% apply(2,per_25)),3) 
+M[5,] <- round((base %>% select(cont_var) %>% apply(2,median,na.rm=TRUE)),3) 
+M[6,] <- round((base %>% select(cont_var) %>% apply(2,per_75)),3) 
+M[7,] <- round((base %>% select(cont_var) %>% apply(2,max,na.rm=TRUE)),3)
+colnames(M) <- cont_var
+rownames(M) <- c("mean","sd","min","Q1","Q2","Q3","max")
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+M %>% data.frame() %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+

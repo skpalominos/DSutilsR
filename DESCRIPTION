@@ -26,5 +26,8 @@ Imports:
   InformationValue,
   ROCit,
   stringr,
-  tidyr
+  tidyr,
+  gridExtra,
+  kableExtra,
+  plotly
 
