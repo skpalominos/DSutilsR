@@ -9,7 +9,7 @@
 #' @import ggplot2
 #'
 
-eval_binary_performance <- function(Y,pred,text){
+eval_binary_performance <- function(Y,pred){
   res <- NULL
   res$M_conf <- ModelMetrics::confusionMatrix(Y,pred)
   res$auc <- ModelMetrics::auc(Y,pred) %>% as.numeric()
@@ -19,7 +19,7 @@ eval_binary_performance <- function(Y,pred,text){
   ### Graficas ----------------------------------------------------------------
 
   #ks y roc
-  res$plot_ks <- InformationValue::ks_plot(Y,pred)+ggtitle(paste0("KS ",text))
+  res$plot_ks <- InformationValue::ks_plot(Y,pred)+ggtitle("KS Plot")
   res$plot_roc <- ROCit::rocit(score=pred,class=Y)
 
   # Confusion Matriz por threshold

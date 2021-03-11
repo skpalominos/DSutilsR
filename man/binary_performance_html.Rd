@@ -4,7 +4,7 @@
 \alias{binary_performance_html}
 \title{binary_performance_html}
 \usage{
-binary_performance_html(Y, pred, M, text, name, direc)
+binary_performance_html(Y, pred, M, name, direc)
 }
 \arguments{
 \item{Y}{Nombre de base de datos a analizar.}
@@ -12,8 +12,6 @@ binary_performance_html(Y, pred, M, text, name, direc)
 \item{pred}{Variable por la cual se prentende agrupar}
 
 \item{M}{Objeto con información adicional}
-
-\item{text}{Nombre variables continuas}
 
 \item{name}{Nombre archivo a generar, este argumento debe ser entregado en formato:
 "nombre.pdf"}

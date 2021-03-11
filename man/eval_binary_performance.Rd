@@ -4,7 +4,7 @@
 \alias{eval_binary_performance}
 \title{eval_binary_performance}
 \usage{
-eval_binary_performance(Y, pred, text)
+eval_binary_performance(Y, pred)
 }
 \arguments{
 \item{Y}{Vector de valores reales}

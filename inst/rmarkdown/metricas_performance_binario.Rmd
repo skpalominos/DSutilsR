@@ -30,7 +30,7 @@ M
 # Metricas de Performance
 
 ```{r ,echo=FALSE}
-res <- eval_binary_performance(Y,pred,text)
+res <- eval_binary_performance(Y,pred)
 ```
 
 ### Valores Generales
