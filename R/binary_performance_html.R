@@ -18,13 +18,13 @@
 
 binary_performance_html <-function(Y,pred,M,name,direc){
   tryCatch({
-    rmarkdown::render(input="inst/rmarkdown/metricas_performance_binario.Rmd",
+    rmarkdown::render(input="rmarkdown/metricas_performance_binario.Rmd",
                       "html_document",
                       output_file=name,
                       output_dir=direc)
   },
   error = function(cond){
-    rmarkdown::render(input="./inst/rmarkdown/metricas_performance_binario.Rmd",
+    rmarkdown::render(input="./rmarkdown/metricas_performance_binario.Rmd",
                       "html_document",
                       output_file=name,
                       output_dir=direc)

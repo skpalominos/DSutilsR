@@ -19,13 +19,13 @@
 
 descriptive_html <-function(base,group_var,cont_vars,cat_vars,name,direc){
   tryCatch({
-    rmarkdown::render(input="inst/rmarkdown/describe_numerical.Rmd",
+    rmarkdown::render(input="rmarkdown/describe_numerical.Rmd",
                       "html_document",
                       output_file=name,
                       output_dir=direc)
   },
   error = function(cond){
-    rmarkdown::render(input="./inst/rmarkdown/describe_numerical.Rmd",
+    rmarkdown::render(input="./rmarkdown/describe_numerical.Rmd",
                       "html_document",
                       output_file=name,
                       output_dir=direc)
