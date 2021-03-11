@@ -1,0 +1,63 @@
+---
+title: "Metricas de Performance"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r ,echo=FALSE,include=FALSE}
+rm(list = ls())
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(gridExtra)
+theme_set(theme_grey())
+```
+<br/><br/>
+
+# Información adicional
+
+```{r ,echo=FALSE}
+M
+```
+
+# Metricas de Performance
+
+```{r ,echo=FALSE}
+res <- eval_binary_performance(Y,pred,text)
+```
+
+### Valores Generales
+
+```{r ,echo=FALSE}
+M <- matrix(ncol=3,nrow=2)
+M[1,] <- round(c(res$auc,res$ks,res$tpr),3)
+M[2,] <- c(1,1,1) 
+colnames(M) <- c("AUC","KS","tpr")
+t(M[1,]) %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+**Grafica Curva de ROC**
+
+```{r ,echo=FALSE,warning=FALSE,fig.width = 5, fig.height = 5, fig.show = "hold"}
+plot(res$plot_roc)
+```
+
+**Grafica KS**
+
+```{r ,echo=FALSE,warning=FALSE,fig.width = 5, fig.height = 5, fig.show = "hold"}
+res$plot_ks
+```
+
+**Matriz de confusion**
+
+```{r ,echo=FALSE}
+res$M_conf_threshold
+```

@@ -31,18 +31,23 @@ colores <- function(x){case_when(x < 25 ~ cell_spec(x,color="white",background="
                                  TRUE ~ cell_spec(x,color="white",background="orangered",bold=T))}
 ```
 
+<br/>
+
+## Variables Continuas
+
 ### Porcentaje de Missing
 
 ```{r ,echo=FALSE,include=FALSE,warning=FALSE}
-base <- base %>% select(cont_var,var_cat)
-miss <- base %>% group_by(get(var_cat)) %>% summarize_at(cont_var,funs(sum(is.na(.)) / length(.)))
-miss <- miss %>% setnames(old="get(var_cat)",new=var_cat)
+base <- base %>% select(cont_vars,cat_vars,group_var)
+miss <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(sum(is.na(.)) / length(.)))
+miss <- miss %>% setnames(old="get(group_var)",new=group_var)
 ```
 
 ```{r ,echo=FALSE,warning=FALSE}
-miss %>% data.frame() %>% select(var_cat,everything()) %>% mutate_at(names(miss %>% select(-var_cat)),"colores") %>% kable(escape = F, align = "c") %>%
+miss %>% data.frame() %>% select(group_var,everything()) %>% mutate_at(names(miss %>% select(-group_var)),"colores") %>% kable(escape = F, align = "c") %>%
   kable_styling(c("striped", "condensed"), full_width = F)
 ```
+<br/><br/>
 
 ### Estadisticos Descriptivos
 
@@ -51,15 +56,15 @@ miss %>% data.frame() %>% select(var_cat,everything()) %>% mutate_at(names(miss 
 per_25 <- function(x){quantile(x %>% na.omit(),probs = (0.25))}
 per_75 <- function(x){quantile(x %>% na.omit(),probs = (0.75))}
 
-M <- matrix(nrow=7,ncol=length(cont_var))
-M[1,] <- round((base %>% select(cont_var) %>% apply(2,mean,na.rm=TRUE)),3) 
-M[2,] <- round((base %>% select(cont_var) %>% apply(2,sd,na.rm=TRUE)),3) 
-M[3,] <- round((base %>% select(cont_var) %>% apply(2,min,na.rm=TRUE)),3) 
-M[4,] <- round((base %>% select(cont_var) %>% apply(2,per_25)),3) 
-M[5,] <- round((base %>% select(cont_var) %>% apply(2,median,na.rm=TRUE)),3) 
-M[6,] <- round((base %>% select(cont_var) %>% apply(2,per_75)),3) 
-M[7,] <- round((base %>% select(cont_var) %>% apply(2,max,na.rm=TRUE)),3)
-colnames(M) <- cont_var
+M <- matrix(nrow=7,ncol=length(cont_vars))
+M[1,] <- round((base %>% select(cont_vars) %>% apply(2,mean,na.rm=TRUE)),3) 
+M[2,] <- round((base %>% select(cont_vars) %>% apply(2,sd,na.rm=TRUE)),3) 
+M[3,] <- round((base %>% select(cont_vars) %>% apply(2,min,na.rm=TRUE)),3) 
+M[4,] <- round((base %>% select(cont_vars) %>% apply(2,per_25)),3) 
+M[5,] <- round((base %>% select(cont_vars) %>% apply(2,median,na.rm=TRUE)),3) 
+M[6,] <- round((base %>% select(cont_vars) %>% apply(2,per_75)),3) 
+M[7,] <- round((base %>% select(cont_vars) %>% apply(2,max,na.rm=TRUE)),3)
+colnames(M) <- cont_vars
 rownames(M) <- c("mean","sd","min","Q1","Q2","Q3","max")
 ```
 
@@ -67,4 +72,39 @@ rownames(M) <- c("mean","sd","min","Q1","Q2","Q3","max")
 M %>% data.frame() %>% kable(escape = F, align = "c") %>%
   kable_styling(c("striped", "condensed"), full_width = F)
 ```
+
+## Variables Categoricas
+
+### Porcentaje de Missing
+
+```{r ,echo=FALSE,include=FALSE,warning=FALSE}
+miss <- base %>% summarize_at(cat_vars,funs(sum(is.na(.)) / length(.)))
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+miss %>% data.frame() %>% select(cat_vars) %>% mutate_at(names(miss),"colores") %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+<br/>
+
+### Estadisticos Descriptivos
+
+**Moda**
+
+```{r ,echo=FALSE,warning=FALSE}
+base %>% summarize_at(cat_vars,"get_mode",'NO')  %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+<br/>
+
+Porporción de casos iguales a la moda:
+
+```{r ,echo=FALSE,warning=FALSE}
+
+base %>% summarize_at(cat_vars,"get_mode",'SI')  %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+
+```
+
+
 
