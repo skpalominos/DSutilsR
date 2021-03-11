@@ -6,7 +6,7 @@ Este package contiene funciones utiles a la hora de manipular bases de datos, es
 
 library(devtools)
 
-library(devtools)
+install_github("skpalominos/DSutilsR")
 
 **Troubleshooting**
 

@@ -19,19 +19,21 @@
 
 descriptive_html <-function(base,group_var,cont_vars,cat_vars,name,direc){
   tryCatch({
-    rmarkdown::render(input="rmarkdown/describe_numerical.Rmd",
-                      "html_document",
+    rmarkdown::render(input="inst/rmd/describe_numerical.Rmd",
+                      "html_document",envir= new.env(),
                       output_file=name,
                       output_dir=direc)
   },
   error = function(cond){
-    rmarkdown::render(input="./rmarkdown/describe_numerical.Rmd",
-                      "html_document",
+    rmarkdown::render(input="./rmd/describe_numerical.Rmd",
+                      "html_document",envir= new.env(),
                       output_file=name,
                       output_dir=direc)
     NULL
   })
 }
 
+
+rmd <- system.file("rmd", "describe_numerical.Rmd", package = "DSutilsR")
 
 
