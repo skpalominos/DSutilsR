@@ -24,7 +24,6 @@ eval_binary_performance <- function(Y,pred,text){
 
   # Confusion Matriz por threshold
   res$M_conf_threshold <- purrr::map(seq(0.1,0.9,0.1),~ModelMetrics::confusionMatrix(Y,pred,.x))
-
   res
 }
 
