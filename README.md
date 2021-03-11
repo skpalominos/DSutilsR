@@ -10,7 +10,7 @@ library(devtools)
 **Troubleshooting**
 
 - 'ft2build.h' file not found
-- 
+
  brew install freetype
  
 - 'git2.h' file not found
