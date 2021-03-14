@@ -17,6 +17,7 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 library(gridExtra)
+library(DSutilsR)
 theme_set(theme_grey())
 ```
 <br/><br/>
@@ -29,7 +30,7 @@ M
 
 # Metricas de Performance
 
-```{r ,echo=FALSE}
+```{r ,echo=FALSE,include=FALSE,warning=FALSE}
 res <- eval_binary_performance(Y,pred)
 ```
 
@@ -46,14 +47,21 @@ t(M[1,]) %>% kable(escape = F, align = "c") %>%
 
 **Grafica Curva de ROC**
 
-```{r ,echo=FALSE,warning=FALSE,fig.width = 5, fig.height = 5, fig.show = "hold"}
+```{r ,echo=FALSE,warning=FALSE,fig.width = 7, fig.height = 5, fig.show = "hold"}
 plot(res$plot_roc)
 ```
 
+**Gráfica Curva de Lift Acumulada**
+
+```{r ,echo=FALSE,warning=FALSE,fig.width = 7, fig.height = 5, fig.show = "hold"}
+plot(res$plot_lift)
+```
+
+
 **Grafica KS**
 
-```{r ,echo=FALSE,warning=FALSE,fig.width = 5, fig.height = 5, fig.show = "hold"}
-res$plot_ks
+```{r ,echo=FALSE,warning=FALSE,fig.width = 7, fig.height = 5, fig.show = "hold"}
+plot(res$plot_ks)
 ```
 
 **Matriz de confusion**

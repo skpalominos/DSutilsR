@@ -18,12 +18,23 @@ eval_binary_performance <- function(Y,pred){
 
   ### Graficas ----------------------------------------------------------------
 
-  #ks y roc
+  #ks
   res$plot_ks <- InformationValue::ks_plot(Y,pred)+ggtitle("KS Plot")
   res$plot_roc <- ROCit::rocit(score=pred,class=Y)
 
+  #plot lift
+  df <- get_lift(pred,Y)
+  res$plot_lift <- plot_lift(df)
+
   # Confusion Matriz por threshold
-  res$M_conf_threshold <- purrr::map(seq(0.1,0.9,0.1),~ModelMetrics::confusionMatrix(Y,pred,.x))
+  get_confusion <- function(Y,pred,.x){
+    M <- ModelMetrics::confusionMatrix(Y,pred,.x)
+    colnames(M) <- c("real 0","real 1")
+    rownames(M) <- c("pred 0","pred 1")
+    M
+  }
+  res$M_conf_threshold <- purrr::map(seq(0.1,0.9,0.1),~get_confusion(Y,pred,.x))
+  names(res$M_conf_threshold) <- paste("threshold",seq(0.1,0.9,0.1))
   res
 }
 
