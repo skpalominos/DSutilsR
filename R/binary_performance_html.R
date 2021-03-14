@@ -17,17 +17,8 @@
 #' @import plotly
 
 binary_performance_html <-function(Y,pred,M,name,direc){
-  tryCatch({
-    rmarkdown::render(input="inst/rmd/metricas_performance_binario.Rmd",
-                      "html_document",envir= new.env(),
-                      output_file=name,
-                      output_dir=direc)
-  },
-  error = function(cond){
-    rmarkdown::render(input="./rmd/metricas_performance_binario.Rmd",
-                      "html_document",,envir= new.env(),
-                      output_file=name,
-                      output_dir=direc)
-    NULL
-  })
+
+ file_name <-  system.file('rmd','metricas_performance_binario.Rmd',package = "DSutilsR")
+  tryCatch({rmarkdown::render(input=file_name,output_file=name,output_dir=direc)},
+           error = function(cond){print("error")})
 }
