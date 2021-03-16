@@ -40,7 +40,7 @@ M <- matrix(ncol=3,nrow=2)
 M[1,] <- round(c(res$auc,res$ks,res$tpr),3)
 M[2,] <- c(1,1,1) 
 colnames(M) <- c("AUC","KS","tpr")
-t(M[1,]) %>% kable(escape = F, align = "c") %>%
+t(M[1,c(1,2,3)]) %>% kable(escape = F, align = "c") %>%
   kable_styling(c("striped", "condensed"), full_width = F)
 ```
 
