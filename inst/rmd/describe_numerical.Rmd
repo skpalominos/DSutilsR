@@ -12,7 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r ,echo=FALSE,include=FALSE}
-rm(list = ls())
 library(plotly)
 library(dplyr)
 library(gridExtra)

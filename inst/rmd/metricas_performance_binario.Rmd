@@ -12,7 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r ,echo=FALSE,include=FALSE}
-rm(list = ls())
 library(ggplot2)
 library(plotly)
 library(dplyr)
