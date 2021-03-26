@@ -10,8 +10,6 @@ eval_binary_performance(Y, pred)
 \item{Y}{Vector de valores reales}
 
 \item{pred}{Vector de predicciones}
-
-\item{text}{Titulo general de las graficas}
 }
 \description{
 Calcula metricas de performance de un modelo de clasificacion binaria

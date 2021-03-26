@@ -1,0 +1,162 @@
+---
+title: "Análisis Estabilidad"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r ,echo=FALSE,include=FALSE}
+library(plotly)
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+library(stringr)
+library(stats)
+library(kableExtra)
+library(data.table)
+library(DSutilsR)
+'%notin%' <- Negate('%in%')
+```
+
+```{r, include=FALSE,warning=FALSE}
+colores_miss <- function(x){case_when(x < 25 ~ cell_spec(x,color="white",background="green",bold =T),
+                                 x < 50 ~ cell_spec(x,color="white",background="orange",bold =T),
+                                 x < 75 ~ cell_spec(x,color="white",background="lightcoral",bold=T),
+                                 TRUE ~ cell_spec(x,color="white",background="orangered",bold=T))}
+```
+
+```{r, include=FALSE,warning=FALSE}
+colores_psi <- function(x){case_when(x < 0.1 ~ cell_spec(x,color="white",background="green",bold =T),
+                                 x < 0.2 ~ cell_spec(x,color="white",background="orange",bold =T),
+                                 TRUE ~ cell_spec(x,color="white",background="orangered",bold=T))}
+```
+
+```{r, include=FALSE,warning=FALSE}
+colores_positive <- function(x){case_when(x >= 0 ~ cell_spec(x,color="white",background="green",bold =T),
+                                 TRUE ~ cell_spec(x,color="white",background="orangered",bold=T))}
+```
+
+<br/>
+
+## Variables Continuas
+
+### Porcentaje de Missing
+
+```{r ,echo=FALSE,include=FALSE,warning=FALSE}
+base <- base %>% select(cont_vars,group_var)
+miss <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(sum(is.na(.)) / length(.)))
+miss <- miss %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+miss %>% data.frame() %>% select(group_var,everything()) %>% mutate_at(names(miss %>% select(-group_var)),"colores_miss") %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+<br/><br/>
+
+### Estadisticos Descriptivos
+
+#### Media 
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(mean(.,na.omit=TRUE) %>% round(3)))
+df_stats <- df_stats %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats %>% data.frame() %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+#### Desviación Estandar 
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(sd(.,na.rm=TRUE) %>% round(3)))
+df_stats <- df_stats %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats %>% data.frame() %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+#### Mímimo
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(min(.,na.rm=TRUE) %>% round(3)))
+df_stats <- df_stats %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats %>% data.frame() %>% select(group_var,everything()) %>% mutate_at(names(df_stats %>% select(-group_var)),"colores_positive") %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+#### Maximo
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(max(.,na.rm=TRUE) %>% round(3)))
+df_stats <- df_stats %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats %>% data.frame() %>% select(group_var,everything()) %>% mutate_at(names(df_stats %>% select(-group_var)),"colores_positive") %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+#### Q1
+
+```{r ,echo=FALSE,warning=FALSE}
+per_25 <- function(x){quantile(x %>% na.omit(),probs = (0.25))}
+per_75 <- function(x){quantile(x %>% na.omit(),probs = (0.75))}
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(per_25(.) %>% round(3)))
+df_stats <- df_stats %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats %>% data.frame() %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+#### Q2
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(median(.,na.rm=TRUE) %>% round(3)))
+df_stats <- df_stats %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats %>% data.frame() %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+#### Q3
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- base %>% group_by(get(group_var)) %>% summarize_at(cont_vars,funs(per_75(.) %>% round(3)))
+df_stats <- df_stats %>% setnames(old="get(group_var)",new=group_var)
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats %>% data.frame() %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+### Indice de estabilidad poblacional (PSI)
+
+```{r ,echo=FALSE,warning=FALSE}
+df_stats <- DSutilsR::multiple_variable_psi(cont_vars,base,group_var,cat_train)
+name <- rownames(df_stats)
+df_stats <- df_stats %>% as.data.frame() %>% mutate(group=name)
+
+df_stats  %>% mutate_at(names(df_stats %>% select(-group)) ,"colores_psi") %>% select(group,everything())%>% kable(escape = F, align = "c") %>% kable_styling(c("striped", "condensed"), full_width = F)
+```

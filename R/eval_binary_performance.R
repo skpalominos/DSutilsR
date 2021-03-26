@@ -2,7 +2,6 @@
 #' @description Calcula metricas de performance de un modelo de clasificacion binaria
 #' @param Y Vector de valores reales
 #' @param pred Vector de predicciones
-#' @param text Titulo general de las graficas
 #' @export
 #' @import dplyr
 #' @import purrr

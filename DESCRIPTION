@@ -19,6 +19,7 @@ Imports:
   ggplot2,
   rmarkdown,
   dplyr,
+  tidyverse,
   data.table,
   lubridate,
   purrr,
