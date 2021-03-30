@@ -12,5 +12,3 @@ multiple_variable_psi <- function(cont_vars,base,group_var,cat_train){
   colnames(res) <- cont_vars
   res
 }
-
-
