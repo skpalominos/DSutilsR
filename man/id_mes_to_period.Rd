@@ -7,8 +7,8 @@
 id_mes_to_period(idmes)
 }
 \arguments{
-\item{idmes}{Fecha en formato %Y%m}
+\item{idmes}{Fecha en formato \%Y\%m}
 }
 \description{
-Transforma una fecha %Y%m a %Y-%m-01
+Transforma una fecha \%Y\%m a \%Y-\%m-01
 }

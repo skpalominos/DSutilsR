@@ -20,6 +20,7 @@ library(stringr)
 library(stats)
 library(kableExtra)
 library(data.table)
+library(ggcorrplot)
 '%notin%' <- Negate('%in%')
 ```
 
@@ -70,6 +71,19 @@ rownames(M) <- c("mean","sd","min","Q1","Q2","Q3","max")
 ```{r ,echo=FALSE,warning=FALSE}
 M %>% data.frame() %>% kable(escape = F, align = "c") %>%
   kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+### Correlaciones
+
+**Gráfica de Correlaciones**
+```{r ,echo=FALSE,warning=FALSE}
+corr <- base %>% select(cont_vars) %>% corr(method = "pearson")
+ggcorrplot(corr)+ggtitle("Grafica Correlación de Pearson")+theme_minimal()
+```
+
+**Matriz de Correlaciones**
+```{r ,echo=FALSE,warning=FALSE}
+corr
 ```
 
 ## Variables Categoricas
