@@ -16,7 +16,7 @@ descriptive_html(base, group_var, cont_vars, cat_vars, name, direc)
 \item{cat_vars}{Nombres variables categoricas}
 
 \item{name}{Nombre archivo a generar, este argumento debe ser entregado en formato:
-"nombre.pdf"}
+"nombre.html"}
 
 \item{direc}{Directorio donde se almacena el archivo a generar.}
 }

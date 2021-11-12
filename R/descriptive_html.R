@@ -5,7 +5,7 @@
 #' @param cont_vars Nombre variables continuas
 #' @param cat_vars Nombres variables categoricas
 #' @param name Nombre archivo a generar, este argumento debe ser entregado en formato:
-#'     "nombre.pdf"
+#'     "nombre.html"
 #' @param direc Directorio donde se almacena el archivo a generar.
 #' @export
 #' @import dplyr

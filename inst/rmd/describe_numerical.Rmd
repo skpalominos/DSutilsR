@@ -47,6 +47,7 @@ miss <- miss %>% setnames(old="get(group_var)",new=group_var)
 miss %>% data.frame() %>% select(group_var,everything()) %>% mutate_at(names(miss %>% select(-group_var)),"colores") %>% kable(escape = F, align = "c") %>%
   kable_styling(c("striped", "condensed"), full_width = F)
 ```
+
 <br/><br/>
 
 ### Estadisticos Descriptivos
@@ -77,7 +78,7 @@ M %>% data.frame() %>% kable(escape = F, align = "c") %>%
 
 **Gráfica de Correlaciones**
 ```{r ,echo=FALSE,warning=FALSE}
-corr <- base %>% select(cont_vars) %>% corr(method = "pearson")
+corr <- base %>% select(cont_vars) %>% cor(method = "pearson")
 ggcorrplot(corr)+ggtitle("Grafica Correlación de Pearson")+theme_minimal()
 ```
 
