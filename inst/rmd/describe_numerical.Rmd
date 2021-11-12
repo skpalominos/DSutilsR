@@ -21,6 +21,7 @@ library(stats)
 library(kableExtra)
 library(data.table)
 library(ggcorrplot)
+library(moments)
 '%notin%' <- Negate('%in%')
 ```
 
@@ -57,7 +58,7 @@ miss %>% data.frame() %>% select(group_var,everything()) %>% mutate_at(names(mis
 per_25 <- function(x){quantile(x %>% na.omit(),probs = (0.25))}
 per_75 <- function(x){quantile(x %>% na.omit(),probs = (0.75))}
 
-M <- matrix(nrow=7,ncol=length(cont_vars))
+M <- matrix(nrow=8,ncol=length(cont_vars))
 M[1,] <- round((base %>% select(cont_vars) %>% apply(2,mean,na.rm=TRUE)),3) 
 M[2,] <- round((base %>% select(cont_vars) %>% apply(2,sd,na.rm=TRUE)),3) 
 M[3,] <- round((base %>% select(cont_vars) %>% apply(2,min,na.rm=TRUE)),3) 
@@ -65,8 +66,9 @@ M[4,] <- round((base %>% select(cont_vars) %>% apply(2,per_25)),3)
 M[5,] <- round((base %>% select(cont_vars) %>% apply(2,median,na.rm=TRUE)),3) 
 M[6,] <- round((base %>% select(cont_vars) %>% apply(2,per_75)),3) 
 M[7,] <- round((base %>% select(cont_vars) %>% apply(2,max,na.rm=TRUE)),3)
+M[8,] <- round((base %>% select(cont_vars) %>% apply(2,skewness,na.rm=TRUE)),3)
 colnames(M) <- cont_vars
-rownames(M) <- c("mean","sd","min","Q1","Q2","Q3","max")
+rownames(M) <- c("mean","sd","min","Q1","Q2","Q3","max","skewness")
 ```
 
 ```{r ,echo=FALSE,warning=FALSE}
@@ -77,14 +79,62 @@ M %>% data.frame() %>% kable(escape = F, align = "c") %>%
 ### Correlaciones
 
 **Gráfica de Correlaciones**
+
 ```{r ,echo=FALSE,warning=FALSE}
-corr <- base %>% select(cont_vars) %>% cor(method = "pearson")
+corr <- base %>% select(cont_vars) %>% cor(method = "pearson") %>% round(3)
 ggcorrplot(corr)+ggtitle("Grafica Correlación de Pearson")+theme_minimal()
 ```
 
 **Matriz de Correlaciones**
+
 ```{r ,echo=FALSE,warning=FALSE}
-corr
+corr %>% data.frame() %>% kable(escape = F, align = "c") %>%
+  kable_styling(c("striped", "condensed"), full_width = F)
+```
+
+### Gráficas Box Plot
+
+```{r ,echo=FALSE,warning=FALSE}
+variable_graph <- function(df,var){
+  if(eval(parse(text=paste0("df$",var))) %>% class()=="numeric"){
+    ggplot(df, aes( y=eval(parse(text=var)))) + geom_boxplot(fill="slateblue", alpha=0.2) +
+      xlab(var)+ggtitle(paste0("Boxplot ",var)) + ylab(var)
+  } else {
+    ggplot(df, aes(x=as.factor(eval(parse(text=var))), fill=as.factor(eval(parse(text=var))))) +
+      geom_bar( ) + scale_fill_brewer(palette = "Set2") + theme(legend.position="none") +
+      ggtitle("Grafico de barras ") + xlab(var) + ylab("N")
+  }
+}
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  plots <- c(list(...), plotlist)
+  numPlots = length(plots)
+  if (is.null(layout)) {
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  if (numPlots==1) {
+    print(plots[[1]])
+  } else {
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    for (i in 1:numPlots) {
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+```{r ,echo=FALSE,warning=FALSE}
+L <- cont_vars %>% map(~variable_graph(base,.x))
+L <- L %>% stats::setNames(cont_vars)
+```
+
+```{r ,echo=FALSE,warning=FALSE,out.width="100%"}
+multiplot(plotlist = L,cols=2)
 ```
 
 ## Variables Categoricas
@@ -120,5 +170,15 @@ base %>% summarize_at(cat_vars,"get_mode",'SI')  %>% kable(escape = F, align = "
 
 ```
 
+### Gráficas de Barra
+
+```{r ,echo=FALSE,warning=FALSE}
+L <- cat_vars %>% map(~variable_graph(base,.x))
+L <- L %>% stats::setNames(cat_vars)
+```
+
+```{r ,echo=FALSE,warning=FALSE,out.width="100%"}
+multiplot(plotlist = L,cols=2)
+```
 
 

@@ -16,6 +16,7 @@
 #' @import kableExtra
 #' @import data.table
 #' @import plotly
+#' @import moments
 
 descriptive_html <-function(base,group_var,cont_vars,cat_vars,name,direc){
 

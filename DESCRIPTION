@@ -31,5 +31,6 @@ Imports:
   gridExtra,
   kableExtra,
   plotly,
-  ggcorrplot
+  ggcorrplot,
+  moments
 
