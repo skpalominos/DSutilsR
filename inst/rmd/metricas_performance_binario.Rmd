@@ -17,6 +17,7 @@ library(plotly)
 library(dplyr)
 library(gridExtra)
 library(DSutilsR)
+library(yardstick)
 theme_set(theme_grey())
 ```
 <br/><br/>
@@ -47,7 +48,7 @@ t(M[1,c(1,2,3)]) %>% kable(escape = F, align = "c") %>%
 **Grafica Curva de ROC**
 
 ```{r ,echo=FALSE,warning=FALSE,fig.width = 7, fig.height = 5, fig.show = "hold"}
-plot(res$plot_roc)
+InformationValue::plotROC(Y,pred)
 ```
 
 **Gráfica Curva de Lift Acumulada**
@@ -63,8 +64,25 @@ plot(res$plot_lift)
 plot(res$plot_ks)
 ```
 
-**Matriz de confusion**
+**Matriz de confusion por threshold**
 
-```{r ,echo=FALSE}
-res$M_conf_threshold
+```{r ,echo=FALSE,out.width="50%",message=FALSE}
+
+# grafico matriz de consusion
+
+plot_confusion_matrix <- function(Y,pred,tresh){
+  df <- data.frame(Y,pred) %>% mutate(Y=if_else(Y==1,"Yes","No") %>% as.factor(),
+                                      pred=if_else(pred>tresh,"Yes","No") %>% as.factor())
+  cm <- conf_mat(df,Y,pred)
+  autoplot(cm, type = "heatmap")+scale_fill_gradient(low="#D6EAF8",high = "#2E86C1")+ggtitle(paste0("Confusion Matrix treshold: ",tresh))
+}
+
+```
+
+```{r ,echo=FALSE,out.width="60%",message=FALSE}
+
+# graficos por treshold
+
+L <- seq(0.1,0.9,0.1) %>% purrr::map(~plot_confusion_matrix(df_test$chd,df_test$prob,.x))
+L
 ```

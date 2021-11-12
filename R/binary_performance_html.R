@@ -15,6 +15,7 @@
 #' @import kableExtra
 #' @import data.table
 #' @import plotly
+#' @import yardstick
 
 binary_performance_html <-function(Y,pred,M,name,direc){
 
